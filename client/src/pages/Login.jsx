@@ -1,49 +1,49 @@
-// src/pages/Login.jsx
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import axiosInstance from '../api/axiosInstance';
-import { loginSuccess } from '../redux/slices/authSlice';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { login, reset } from '../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '../components/common/Button';
+import { toast } from 'react-toastify';
+import Spinner from "../components/common/Spinner";
+
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await axiosInstance.post('/auth/login', { email, password });
-      dispatch(loginSuccess(res.data));
-      navigate('/dashboard');
-    } catch (err) {
-      alert(err?.response?.data?.message || 'Login failed');
-    }
+  const { user, isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (isError) toast.error(message);
+    if (isSuccess || user) navigate('/dashboard');
+
+    dispatch(reset());
+  }, [user, isError, isSuccess, message, navigate, dispatch]);
+
+  const onChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const onSubmit = (e) => {
+    e.preventDefault();
+    dispatch(login(formData));
+  };
+
+  if (isLoading) return <Spinner />;
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <form onSubmit={handleLogin} className="bg-white p-8 rounded shadow-md w-96">
-        <h2 className="text-2xl font-semibold mb-6 text-center">Login to TradeVerse</h2>
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full px-4 py-2 mb-4 border rounded"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full px-4 py-2 mb-6 border rounded"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <Button type="submit" label="Login" />
+    <div className="min-h-screen flex items-center justify-center bg-[#0b1120] text-white px-4">
+      <form onSubmit={onSubmit} className="bg-[#1c2431] p-8 rounded-xl shadow-lg w-full max-w-md space-y-6">
+        <h2 className="text-2xl font-bold text-center">Login to TradeVerse</h2>
+
+        <input type="email" name="email" value={formData.email} onChange={onChange} required
+          className="w-full px-4 py-2 rounded bg-[#111827] border border-gray-600" placeholder="Email" />
+        <input type="password" name="password" value={formData.password} onChange={onChange} required
+          className="w-full px-4 py-2 rounded bg-[#111827] border border-gray-600" placeholder="Password" />
+
+        <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 py-2 rounded text-white font-semibold">
+          Login
+        </button>
       </form>
     </div>
   );

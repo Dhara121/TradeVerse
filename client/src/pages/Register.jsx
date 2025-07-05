@@ -1,58 +1,54 @@
-// src/pages/Register.jsx
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import axiosInstance from '../api/axiosInstance';
-import { loginSuccess } from '../redux/slices/authSlice';
+import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '../components/common/Button';
+import { toast } from 'react-toastify';
+import { register, reset } from '../redux/slices/authSlice';
+import Spinner from '../components/common/Spinner';
 
 const Register = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    password2: '',
+  });
+
+  const { name, email, password, password2 } = formData;
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await axiosInstance.post('/auth/register', { name, email, password });
-      dispatch(loginSuccess(res.data));
-      navigate('/dashboard');
-    } catch (err) {
-      alert(err?.response?.data?.message || 'Registration failed');
-    }
+  const { user, isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (isError) toast.error(message);
+    if (isSuccess || user) navigate('/dashboard');
+    dispatch(reset());
+  }, [user, isError, isSuccess, message, navigate, dispatch]);
+
+  const onChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (password !== password2) return toast.error('Passwords do not match');
+    dispatch(register({ name, email, password }));
+  };
+
+  if (isLoading) return <Spinner />;
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <form onSubmit={handleRegister} className="bg-white p-8 rounded shadow-md w-96">
-        <h2 className="text-2xl font-semibold mb-6 text-center">Create Account</h2>
-        <input
-          type="text"
-          placeholder="Name"
-          className="w-full px-4 py-2 mb-4 border rounded"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full px-4 py-2 mb-4 border rounded"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full px-4 py-2 mb-6 border rounded"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <Button type="submit" label="Register" />
+    <div className="min-h-screen bg-[#0b1120] text-white flex items-center justify-center">
+      <form onSubmit={onSubmit} className="bg-[#1e293b] p-8 rounded-xl w-full max-w-md space-y-6 shadow-lg">
+        <h2 className="text-2xl font-bold text-center">Create Account</h2>
+
+        <input name="name" value={name} onChange={onChange} placeholder="Name" required className="w-full p-2 bg-[#111827] border border-gray-600 rounded" />
+        <input name="email" value={email} onChange={onChange} type="email" placeholder="Email" required className="w-full p-2 bg-[#111827] border border-gray-600 rounded" />
+        <input name="password" value={password} onChange={onChange} type="password" placeholder="Password" required className="w-full p-2 bg-[#111827] border border-gray-600 rounded" />
+        <input name="password2" value={password2} onChange={onChange} type="password" placeholder="Confirm Password" required className="w-full p-2 bg-[#111827] border border-gray-600 rounded" />
+
+        <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded font-semibold">Register</button>
       </form>
     </div>
   );

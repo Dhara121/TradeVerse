@@ -17,10 +17,12 @@ exports.register = asyncHandler(async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, 12);
 
   const user = await User.create({
-    name,
-    email,
-    password: hashedPassword,
-  });
+  name,
+  email,
+  password: hashedPassword,
+  virtualBalance: 1000, 
+});
+
 
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
     expiresIn: "30d",
