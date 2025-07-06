@@ -1,9 +1,22 @@
 services:
   - type: web
-    name: tradeverse-app
+    name: tradeverse-backend
     env: docker
-    repo: https://github.com/Dhara121/TradeVerse
     plan: free
-    region: oregon
-    branch: main
-    rootDir: .
+    rootDir: server
+    dockerfilePath: Dockerfile
+    buildFilter:
+      paths:
+        - server/**
+    autoDeploy: true
+
+  - type: web
+    name: tradeverse-frontend
+    env: docker
+    plan: free
+    rootDir: client
+    dockerfilePath: Dockerfile
+    buildFilter:
+      paths:
+        - client/**
+    autoDeploy: true
