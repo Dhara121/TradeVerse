@@ -4,7 +4,7 @@ services:
     env: docker
     plan: free
     rootDir: server
-    dockerfilePath: Dockerfile
+    dockerfilePath: server/Dockerfile 
     buildFilter:
       paths:
         - server/**
@@ -15,7 +15,7 @@ services:
     env: docker
     plan: free
     rootDir: client
-    dockerfilePath: Dockerfile
+    dockerfilePath: client/Dockerfile
     buildFilter:
       paths:
         - client/**
