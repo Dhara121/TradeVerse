@@ -4,19 +4,11 @@ services:
     env: docker
     plan: free
     rootDir: server
-    dockerfilePath: server/Dockerfile 
-    buildFilter:
-      paths:
-        - server/**
-    autoDeploy: true
+    dockerfilePath: ./Dockerfile  # Because Dockerfile is inside server/
 
   - type: web
     name: tradeverse-frontend
     env: docker
     plan: free
     rootDir: client
-    dockerfilePath: client/Dockerfile
-    buildFilter:
-      paths:
-        - client/**
-    autoDeploy: true
+    dockerfilePath: ./Dockerfile  # Because Dockerfile is inside client/
