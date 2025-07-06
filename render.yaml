@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: tradeverse-app
+    env: docker
+    repo: https://github.com/Dhara121/TradeVerse
+    plan: free
+    region: oregon
+    branch: main
+    rootDir: .
