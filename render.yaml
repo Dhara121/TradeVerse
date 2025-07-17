@@ -23,7 +23,7 @@ services:
     env: node
     plan: free
     region: oregon
-    buildCommand: cd client && npm ci && npx vite build
+    buildCommand: cd client && npm install --production=false && npx vite build
     startCommand: cd client && npx serve -s dist -l 10000
     envVars:
       - key: NODE_ENV
