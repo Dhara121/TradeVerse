@@ -1,26 +1,32 @@
 services:
   - type: web
     name: tradeverse-backend
-    env: docker
+    env: node
     plan: free
-    rootDir: server
-    dockerfilePath: ./Dockerfile
+    region: oregon
+    buildCommand: cd server && npm install
+    startCommand: cd server && npm start
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: 5000
-      - key: MONGO_URI
+        value: 10000
+      - key: MONGODB_URI
         fromDatabase:
           name: tradeverse-db
           property: connectionString
+      - key: JWT_SECRET
+        generateValue: true  # Auto-generates a secure random value
+      - key: TWELVE_DATA_API_KEY
+        value: 59548ef81d2644ffb5323d952454f2e4
 
   - type: web
     name: tradeverse-frontend
-    env: docker
+    env: static
     plan: free
-    rootDir: client
-    dockerfilePath: ./Dockerfile
+    region: oregon
+    buildCommand: cd client && npm install && npm run build
+    staticPublishPath: ./client/dist
     envVars:
       - key: VITE_API_URL
         value: https://tradeverse-backend.onrender.com
@@ -29,3 +35,4 @@ databases:
   - name: tradeverse-db
     databaseName: tradeverse
     user: tradeverse
+    region: oregon
