@@ -4,11 +4,28 @@ services:
     env: docker
     plan: free
     rootDir: server
-    dockerfilePath: ./Dockerfile  # Because Dockerfile is inside server/
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: MONGO_URI
+        fromDatabase:
+          name: tradeverse-db
+          property: connectionString
 
   - type: web
     name: tradeverse-frontend
     env: docker
     plan: free
     rootDir: client
-    dockerfilePath: ./Dockerfile  # Because Dockerfile is inside client/
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: VITE_API_URL
+        value: https://tradeverse-backend.onrender.com
+
+databases:
+  - name: tradeverse-db
+    databaseName: tradeverse
+    user: tradeverse
