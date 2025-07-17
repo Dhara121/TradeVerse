@@ -23,10 +23,10 @@ services:
     env: node
     plan: free
     region: oregon
-    buildCommand: cd client && npm install && npm run build
-    startCommand: cd client && serve -s build -l 10000
+    buildCommand: cd client && npm ci && npm run build
+    startCommand: cd client && npx serve -s dist -l 10000
     envVars:
       - key: NODE_ENV
         value: production
       - key: REACT_APP_API_URL
-        value: https://tradeverse-backend.onrender.com
+        value: https://tradeverse-backend-0nxk.onrender.com
