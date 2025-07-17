@@ -9,29 +9,24 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 10000
       - key: MONGODB_URI
-        fromDatabase:
-          name: tradeverse-db
-          property: connectionString
+        value: mongodb+srv://2022btechaidsdhara13187:VZ3bGWHhmaLIWe9Q@cluster0.hiq3vvi.mongodb.net/tradeverse_db?retryWrites=true&w=majority
       - key: JWT_SECRET
-        generateValue: true  # Auto-generates a secure random value
+        value: TradeVerseSuperSecretToken
       - key: TWELVE_DATA_API_KEY
         value: 59548ef81d2644ffb5323d952454f2e4
-
+      - key: PORT
+        value: 10000
+    
   - type: web
     name: tradeverse-frontend
-    env: static
+    env: node
     plan: free
-    buildCommand: cd client && npm install && npm run build
-    staticPublishPath: ./client/dist
-    envVars:
-      - key: VITE_API_URL
-        value: https://tradeverse-backend.onrender.com
-
-databases:
-  - name: tradeverse-db
-    databaseName: tradeverse
-    user: tradeverse
     region: oregon
+    buildCommand: cd client && npm install && npm run build
+    startCommand: cd client && serve -s build -l 10000
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: REACT_APP_API_URL
+        value: https://tradeverse-backend.onrender.com
