@@ -24,7 +24,6 @@ services:
     name: tradeverse-frontend
     env: static
     plan: free
-    region: oregon
     buildCommand: cd client && npm install && npm run build
     staticPublishPath: ./client/dist
     envVars:
