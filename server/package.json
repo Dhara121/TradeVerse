@@ -9,7 +9,14 @@
     "client": "npm run dev --prefix ../client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
-  "keywords": ["express", "trading", "api", "mongodb", "react", "fullstack"],
+  "keywords": [
+    "express",
+    "trading",
+    "api",
+    "mongodb",
+    "react",
+    "fullstack"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -20,10 +27,11 @@
     "express": "^5.1.0",
     "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.16.1"
+    "mongoose": "^8.16.1",
+    "serverless-http": "^3.2.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10",
-    "concurrently": "^9.2.0"
+    "concurrently": "^9.2.0",
+    "nodemon": "^3.1.10"
   }
 }
